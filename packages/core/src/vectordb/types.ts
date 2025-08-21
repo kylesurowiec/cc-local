@@ -142,4 +142,5 @@ export const COLLECTION_LIMIT_MESSAGE = "[Error]: Your Zilliz Cloud account has 
 /**
  * Pattern to detect collection limit errors from Zilliz Cloud API responses
  */
-export const COLLECTION_LIMIT_ERROR_PATTERN = /exceeded the limit number of collections/i; 
+export const COLLECTION_LIMIT_ERROR_PATTERN = /exceeded the limit number of collections/i;
+
