@@ -757,10 +757,9 @@ export class MilvusVectorDatabase implements VectorDatabase {
             const errorMessage = error.message || error.toString() || '';
             if (COLLECTION_LIMIT_ERROR_PATTERN.test(errorMessage)) {
                 // Return false for collection limit exceeded
-                console.log(`[COLLECTION-LIMIT] Collection limit detected: ${errorMessage}`);
                 return false;
             }
-            throw new Error(`Collection validation failed: ${errorMessage}`);
+            throw error;
         }
     }
 }
