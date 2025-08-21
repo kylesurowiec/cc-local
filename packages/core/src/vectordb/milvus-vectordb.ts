@@ -8,6 +8,7 @@ import {
     HybridSearchOptions,
     HybridSearchResult,
     COLLECTION_LIMIT_MESSAGE,
+    COLLECTION_LIMIT_ERROR_PATTERN,
 } from './types';
 import { ClusterManager } from './zilliz-utils';
 
@@ -759,7 +760,7 @@ export class MilvusVectorDatabase implements VectorDatabase {
         } catch (error: any) {
             // Check if the error message contains the collection limit exceeded pattern
             const errorMessage = error.message || error.toString() || '';
-            if (errorMessage === COLLECTION_LIMIT_MESSAGE || errorMessage.includes(COLLECTION_LIMIT_MESSAGE)) {
+            if (COLLECTION_LIMIT_ERROR_PATTERN.test(errorMessage)) {
                 // Return false for collection limit exceeded
                 console.log(`[COLLECTION-LIMIT] Collection limit detected: ${errorMessage}`);
                 return false;
