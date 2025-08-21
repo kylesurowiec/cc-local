@@ -760,8 +760,6 @@ export class MilvusVectorDatabase implements VectorDatabase {
                 console.log(`[COLLECTION-LIMIT] Collection limit detected: ${errorMessage}`);
                 return false;
             }
-            // Re-throw other errors with more context
-            console.error(`[COLLECTION-LIMIT] Unexpected error during collection limit check:`, error);
             throw new Error(`Collection validation failed: ${errorMessage}`);
         }
     }
