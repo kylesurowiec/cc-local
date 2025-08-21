@@ -264,17 +264,7 @@ export class ToolHandlers {
                 }
 
                 // For other validation errors, provide a more specific error message
-                let detailedError = 'Unknown error';
-                if (validationError.message) {
-                    detailedError = validationError.message;
-                } else if (typeof validationError === 'string') {
-                    detailedError = validationError;
-                } else if (validationError.toString() !== '[object Object]') {
-                    detailedError = validationError.toString();
-                } else {
-                    // Try to extract useful information from the error object
-                    detailedError = JSON.stringify(validationError, null, 2);
-                }
+                const detailedError = validationError.message || validationError.toString() || 'Unknown error';
 
                 return {
                     content: [{
