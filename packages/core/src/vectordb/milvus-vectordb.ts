@@ -7,7 +7,6 @@ import {
     HybridSearchRequest,
     HybridSearchOptions,
     HybridSearchResult,
-    COLLECTION_LIMIT_ERROR_PATTERN,
 } from './types';
 import { ClusterManager } from './zilliz-utils';
 
