@@ -250,11 +250,8 @@ export class ToolHandlers {
                 // Handle other collection creation errors
                 console.error(`[INDEX-VALIDATION] ❌ Collection creation validation failed:`, validationError);
 
-                // Check if this is specifically a collection limit error
                 const errorMessage = validationError.message || validationError.toString() || '';
-                if (errorMessage === COLLECTION_LIMIT_MESSAGE ||
-                    errorMessage.includes(COLLECTION_LIMIT_MESSAGE) ||
-                    /exceeded the limit number of collections/i.test(errorMessage)) {
+                if (errorMessage === COLLECTION_LIMIT_MESSAGE || errorMessage.includes(COLLECTION_LIMIT_MESSAGE)) {
                     return {
                         content: [{
                             type: "text",

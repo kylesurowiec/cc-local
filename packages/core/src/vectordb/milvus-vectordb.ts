@@ -7,6 +7,7 @@ import {
     HybridSearchRequest,
     HybridSearchOptions,
     HybridSearchResult,
+    COLLECTION_LIMIT_MESSAGE,
 } from './types';
 import { ClusterManager } from './zilliz-utils';
 
@@ -752,17 +753,12 @@ export class MilvusVectorDatabase implements VectorDatabase {
                     });
                 }
             } catch (dropError) {
-                // Log but don't fail if cleanup fails
                 console.warn(`Failed to cleanup dummy collection ${collectionName}:`, dropError);
             }
             return true;
         } catch (error: any) {
-            // Check if the error message contains the collection limit exceeded pattern
             const errorMessage = error.message || error.toString() || '';
-            if (/exceeded the limit number of collections/i.test(errorMessage) ||
-                /collection limit/i.test(errorMessage) ||
-                /too many collections/i.test(errorMessage)) {
-                // Return false for collection limit exceeded
+            if (errorMessage === COLLECTION_LIMIT_MESSAGE || errorMessage.includes(COLLECTION_LIMIT_MESSAGE)) {
                 console.log(`[COLLECTION-LIMIT] Collection limit detected: ${errorMessage}`);
                 return false;
             }
