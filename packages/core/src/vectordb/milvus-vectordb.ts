@@ -746,15 +746,10 @@ export class MilvusVectorDatabase implements VectorDatabase {
 
         try {
             await this.client.createCollection(createCollectionParams);
-            // Immediately drop the collection after successful creation
-            try {
-                if (await this.client.hasCollection({ collection_name: collectionName })) {
-                    await this.client.dropCollection({
-                        collection_name: collectionName,
-                    });
-                }
-            } catch (dropError) {
-                console.warn(`Failed to cleanup dummy collection ${collectionName}:`, dropError);
+            if (await this.client.hasCollection({ collection_name: collectionName })) {
+                await this.client.dropCollection({
+                    collection_name: collectionName,
+                });
             }
             return true;
         } catch (error: any) {
