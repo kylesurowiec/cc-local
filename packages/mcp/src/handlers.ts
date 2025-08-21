@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import * as crypto from "crypto";
-import { Context, COLLECTION_LIMIT_MESSAGE, COLLECTION_LIMIT_ERROR_PATTERN } from "@zilliz/claude-context-core";
+import { Context, COLLECTION_LIMIT_MESSAGE } from "@zilliz/claude-context-core";
 import { SnapshotManager } from "./snapshot.js";
 import { ensureAbsolutePath, truncateContent, trackCodebasePath } from "./utils.js";
 
@@ -249,25 +249,11 @@ export class ToolHandlers {
             } catch (validationError: any) {
                 // Handle other collection creation errors
                 console.error(`[INDEX-VALIDATION] ❌ Collection creation validation failed:`, validationError);
-
-                const errorMessage = validationError.message || validationError.toString() || '';
-                if (COLLECTION_LIMIT_ERROR_PATTERN.test(errorMessage)) {
-                    return {
-                        content: [{
-                            type: "text",
-                            text: COLLECTION_LIMIT_MESSAGE
-                        }],
-                        isError: true
-                    };
-                }
-
-                // For other validation errors, provide a more specific error message
-                const detailedError = validationError.message || validationError.toString() || 'Unknown error';
-
+                
                 return {
                     content: [{
                         type: "text",
-                        text: `Error validating collection creation: ${detailedError}`
+                        text: `Error validating collection creation: ${validationError.message || validationError}`
                     }],
                     isError: true
                 };
