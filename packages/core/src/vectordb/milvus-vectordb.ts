@@ -745,21 +745,30 @@ export class MilvusVectorDatabase implements VectorDatabase {
         try {
             await this.client.createCollection(createCollectionParams);
             // Immediately drop the collection after successful creation
-            if (await this.client.hasCollection({ collection_name: collectionName })) {
-                await this.client.dropCollection({
-                    collection_name: collectionName,
-                });
+            try {
+                if (await this.client.hasCollection({ collection_name: collectionName })) {
+                    await this.client.dropCollection({
+                        collection_name: collectionName,
+                    });
+                }
+            } catch (dropError) {
+                // Log but don't fail if cleanup fails
+                console.warn(`Failed to cleanup dummy collection ${collectionName}:`, dropError);
             }
             return true;
         } catch (error: any) {
             // Check if the error message contains the collection limit exceeded pattern
             const errorMessage = error.message || error.toString() || '';
-            if (/exceeded the limit number of collections/i.test(errorMessage)) {
+            if (/exceeded the limit number of collections/i.test(errorMessage) ||
+                /collection limit/i.test(errorMessage) ||
+                /too many collections/i.test(errorMessage)) {
                 // Return false for collection limit exceeded
+                console.log(`[COLLECTION-LIMIT] Collection limit detected: ${errorMessage}`);
                 return false;
             }
-            // Re-throw other errors as-is
-            throw error;
+            // Re-throw other errors with more context
+            console.error(`[COLLECTION-LIMIT] Unexpected error during collection limit check:`, error);
+            throw new Error(`Collection validation failed: ${errorMessage}`);
         }
     }
 }

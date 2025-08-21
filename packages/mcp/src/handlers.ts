@@ -249,10 +249,38 @@ export class ToolHandlers {
             } catch (validationError: any) {
                 // Handle other collection creation errors
                 console.error(`[INDEX-VALIDATION] ❌ Collection creation validation failed:`, validationError);
+
+                // Check if this is specifically a collection limit error
+                const errorMessage = validationError.message || validationError.toString() || '';
+                if (errorMessage === COLLECTION_LIMIT_MESSAGE ||
+                    errorMessage.includes(COLLECTION_LIMIT_MESSAGE) ||
+                    /exceeded the limit number of collections/i.test(errorMessage)) {
+                    return {
+                        content: [{
+                            type: "text",
+                            text: COLLECTION_LIMIT_MESSAGE
+                        }],
+                        isError: true
+                    };
+                }
+
+                // For other validation errors, provide a more specific error message
+                let detailedError = 'Unknown error';
+                if (validationError.message) {
+                    detailedError = validationError.message;
+                } else if (typeof validationError === 'string') {
+                    detailedError = validationError;
+                } else if (validationError.toString() !== '[object Object]') {
+                    detailedError = validationError.toString();
+                } else {
+                    // Try to extract useful information from the error object
+                    detailedError = JSON.stringify(validationError, null, 2);
+                }
+
                 return {
                     content: [{
                         type: "text",
-                        text: `Error validating collection creation: ${validationError.message || validationError}`
+                        text: `Error validating collection creation: ${detailedError}`
                     }],
                     isError: true
                 };
