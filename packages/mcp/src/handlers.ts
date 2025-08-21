@@ -251,9 +251,7 @@ export class ToolHandlers {
                 console.error(`[INDEX-VALIDATION] ❌ Collection creation validation failed:`, validationError);
 
                 const errorMessage = validationError.message || validationError.toString() || '';
-                if (errorMessage === COLLECTION_LIMIT_MESSAGE || 
-                    errorMessage.includes(COLLECTION_LIMIT_MESSAGE) ||
-                    COLLECTION_LIMIT_ERROR_PATTERN.test(errorMessage)) {
+                if (COLLECTION_LIMIT_ERROR_PATTERN.test(errorMessage)) {
                     return {
                         content: [{
                             type: "text",
