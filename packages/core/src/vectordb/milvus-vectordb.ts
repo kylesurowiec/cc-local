@@ -7,7 +7,6 @@ import {
     HybridSearchRequest,
     HybridSearchOptions,
     HybridSearchResult,
-    COLLECTION_LIMIT_MESSAGE,
     COLLECTION_LIMIT_ERROR_PATTERN,
 } from './types';
 import { ClusterManager } from './zilliz-utils';
@@ -746,6 +745,7 @@ export class MilvusVectorDatabase implements VectorDatabase {
 
         try {
             await this.client.createCollection(createCollectionParams);
+            // Immediately drop the collection after successful creation
             if (await this.client.hasCollection({ collection_name: collectionName })) {
                 await this.client.dropCollection({
                     collection_name: collectionName,
