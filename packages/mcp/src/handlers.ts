@@ -249,7 +249,6 @@ export class ToolHandlers {
             } catch (validationError: any) {
                 // Handle other collection creation errors
                 console.error(`[INDEX-VALIDATION] ❌ Collection creation validation failed:`, validationError);
-                
                 return {
                     content: [{
                         type: "text",
