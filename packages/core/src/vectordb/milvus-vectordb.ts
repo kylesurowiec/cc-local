@@ -759,7 +759,7 @@ export class MilvusVectorDatabase implements VectorDatabase {
         } catch (error: any) {
             // Check if the error message contains the collection limit exceeded pattern
             const errorMessage = error.message || error.toString() || '';
-            if (/exceeded the limit number of collections/i.test(errorMessage)) {
+            if (errorMessage === COLLECTION_LIMIT_MESSAGE || errorMessage.includes(COLLECTION_LIMIT_MESSAGE)) {
                 // Return false for collection limit exceeded
                 console.log(`[COLLECTION-LIMIT] Collection limit detected: ${errorMessage}`);
                 return false;
