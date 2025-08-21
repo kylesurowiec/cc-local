@@ -755,10 +755,11 @@ export class MilvusVectorDatabase implements VectorDatabase {
         } catch (error: any) {
             // Check if the error message contains the collection limit exceeded pattern
             const errorMessage = error.message || error.toString() || '';
-            if (COLLECTION_LIMIT_ERROR_PATTERN.test(errorMessage)) {
+            if (/exceeded the limit number of collections/i.test(errorMessage)) {
                 // Return false for collection limit exceeded
                 return false;
             }
+            // Re-throw other errors as-is
             throw error;
         }
     }
